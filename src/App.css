@@ -1,0 +1,88 @@
+/* Sidebar shopping overlay setup rules */
+.cart-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 2000;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.cart-sidebar {
+  width: 380px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  animation: slideIn 0.25s ease-out-forward;
+}
+
+@keyframes slideIn {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+/* Base custom interactive zoom frames */
+.product-img-wrapper {
+  overflow: hidden;
+  position: relative;
+  background: #ffffff;
+  height: 230px;
+}
+/* Trademark Amazon Light E-Commerce Checkout Mask Layer Rules */
+.amazon-checkout-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vw;
+  min-height: 100vh;
+  background-color: #eaeded; /* The signature Amazon off-white light page background layout tone */
+  z-index: 4000;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 60px;
+  padding-left: 15px;
+  padding-right: 15px;
+  overflow-y: auto;
+}
+
+.amazon-checkout-container {
+  width: 100%;
+  max-width: 820px;
+  padding: 24px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+/* Amazon Iconic Yellow/Amber Action Gradients UI Accent */
+.amazon-btn-gold {
+  background: linear-gradient(to bottom, #f7dfa5, #f0c14b);
+  border: 1px solid #a88734;
+  border-radius: 3px;
+  transition: background 0.2s ease;
+}
+
+.amazon-btn-gold:hover {
+  background: linear-gradient(to bottom, #f5d48a, #ecb52a);
+  border-color: #846a29;
+}
+
+/* Animation utilities */
+.animate-fade-in {
+  animation: fadeInEffect 0.2s ease-out;
+}
+
+@keyframes fadeInEffect {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+/* Custom premium hero background layout wrapper rules */
+.tactical-hero-banner {
+  background: linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)), 
+              url('/homepage.jpg') no-repeat center center;
+  background-size: cover;
+  border-bottom: 4px solid #198754; /* Explicit clean green bottom stripe frame border */
+}
