@@ -28,13 +28,10 @@ jobs:
         with:
           node-version: 18
           cache: 'npm'
-
 - name: Install Dependencies
-  run: npm i --no-audit --no-fund
-
-
+  run: npm ci
       - name: Build Application
-        run: npm run build
+        npm i --no-audit --no-fund
 
       - name: Upload Production Assets
         uses: actions/upload-pages-artifact@v3
