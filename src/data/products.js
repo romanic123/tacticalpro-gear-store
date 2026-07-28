@@ -5,7 +5,7 @@ const products = [
     price: 129.99,
     category: "Vests",
     sizes: ["S", "M", "L"],
-    image: "/vest.jpg",
+    image: "https://github.io",
     description: "Heavy-duty laser cut MOLLE system vest with adjustable quick-release side buckles."
   },
   {
@@ -14,7 +14,7 @@ const products = [
     price: 99.99,
     category: "Footwear",
     sizes: ["S", "M", "L"],
-    image: "/boots.jpg",
+    image: "https://github.io",
     description: "Waterproof full-grain leather boots with oil-resistant rubber traction outsoles."
   },
   {
@@ -23,7 +23,7 @@ const products = [
     price: 45.50,
     category: "Belts",
     sizes: ["S", "M", "L"],
-    image: "/belt.jpg",
+    image: "https://github.io",
     description: "Dual-belt system with integrated rigid inner lining and authentic quick-release buckle."
   },
   {
@@ -32,7 +32,7 @@ const products = [
     price: 189.99,
     category: "Optics",
     sizes: ["S", "M", "L"],
-    image: "/sight.jpg", // Points directly to public/sight.jpg
+    image: "https://github.io",
     description: "Precision target acquisition optics featuring multiple brightness settings and rugged aluminum housing."
   },
   {
@@ -41,7 +41,7 @@ const products = [
     price: 155.00,
     category: "Hardware",
     sizes: ["S", "M", "L"],
-    image: "/tacwatch.jpg", // Points directly to public/tacwatch.jpg
+    image: "https://github.io",
     description: "Shockproof, water-resistant tactical watch equipped with digital compass and altimeter tracking arrays."
   },
   {
@@ -50,7 +50,7 @@ const products = [
     price: 249.99,
     category: "Headwear",
     sizes: ["S", "M", "L"],
-    image: "/helmet.jpg", // Points directly to public/helmet.jpg
+    image: "https://github.io",
     description: "Lightweight high-cut ballistic helmet designed with side accessory rails and NVG shroud mounting paths."
   }
 ];
