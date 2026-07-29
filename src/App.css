@@ -82,7 +82,7 @@
 /* Custom premium hero background layout wrapper rules */
 .tactical-hero-banner {
   background: linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)), 
-              url('homepage.jpg') no-repeat center center;
+              url('/homepage.jpg') no-repeat center center;
   background-size: cover;
   border-bottom: 4px solid #198754; /* Explicit clean green bottom stripe frame border */
 }
