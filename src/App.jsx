@@ -14,21 +14,19 @@ function App() {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [checkoutStep, setCheckoutStep] = useState('none'); 
 
-  // ADVANCED: Internal Navigation History State Stack Mapping Parameters
+  // ADVANCED: Internal state routing arrays for path logging management
   const [pageHistory, setPageHistory] = useState(['Home']);
   const [historyIndex, setHistoryIndex] = useState(0);
   const [isInternalNavigating, setIsInternalNavigating] = useState(false);
 
-  // Synchronize internal history tracking when active page changes via Navbar links
+  // Monitors and logs historical page indexing when tabs are clicked
   useEffect(() => {
     if (isInternalNavigating) {
       setIsInternalNavigating(false);
       return;
     }
-    // Prevent logging consecutive duplicates
     if (pageHistory[historyIndex] === activePage) return;
 
-    // Erase forward timeline branches if user maps a brand new tab link
     const cleanHistory = pageHistory.slice(0, historyIndex + 1);
     const updatedHistory = [...cleanHistory, activePage];
     
@@ -36,7 +34,7 @@ function App() {
     setHistoryIndex(updatedHistory.length - 1);
   }, [activePage]);
 
-  // Hook interceptor locking the browser back arrow key to stay on-site
+  // Intercepts hardware back gestures to use internal memory matrix arrays instead of leaving the site
   useEffect(() => {
     window.history.pushState({ page: activePage }, '', '');
     const handlePopState = (event) => {
@@ -47,7 +45,6 @@ function App() {
     return () => window.removeEventListener('popstate', handlePopState);
   }, [activePage, historyIndex, pageHistory]);
 
-  // Directional Action: Move Back inside state array loop logs
   const handleTriggerBack = () => {
     if (historyIndex > 0) {
       const prevIndex = historyIndex - 1;
@@ -55,12 +52,10 @@ function App() {
       setHistoryIndex(prevIndex);
       setActivePage(pageHistory[prevIndex]);
     } else {
-      // Fallback redirect protection keeps user locked on local landing view dashboard safely
       setActivePage('Home');
     }
   };
 
-  // Directional Action: Move Forward inside state array loop logs
   const handleTriggerForward = () => {
     if (historyIndex < pageHistory.length - 1) {
       const nextIndex = historyIndex + 1;
@@ -99,7 +94,7 @@ function App() {
     <div className="bg-light min-vh-100 d-flex flex-column" style={{ paddingTop: '70px' }}>
       <Navbar cartCount={totalItemsCount} activePage={activePage} setActivePage={setActivePage} onCartClick={() => setIsCartOpen(true)} />
 
-      {/* FIXED TOP ROW MANAGEMENT PANEL: Displays Custom History Command Buttons */}
+      {/* FIXED INTERNAL BUTTON LAYER BAR PANEL */}
       <div className="bg-white border-bottom py-2 shadow-sm sticky-history-bar">
         <div className="container d-flex align-items-center justify-content-between">
           <div className="d-flex align-items-center gap-2">
@@ -107,7 +102,6 @@ function App() {
               className={`btn btn-sm ${historyIndex === 0 ? 'btn-outline-secondary opacity-50' : 'btn-success fw-bold text-white'}`}
               onClick={handleTriggerBack}
               disabled={historyIndex === 0}
-              title="Navigate Backwards"
             >
               <FaArrowLeft className="me-1" /> Back
             </button>
@@ -115,13 +109,12 @@ function App() {
               className={`btn btn-sm ${historyIndex === pageHistory.length - 1 ? 'btn-outline-secondary opacity-50' : 'btn-success fw-bold text-white'}`}
               onClick={handleTriggerForward}
               disabled={historyIndex === pageHistory.length - 1}
-              title="Navigate Forwards"
             >
               Forward <FaArrowRight className="ms-1" />
             </button>
           </div>
-          <div className="small font-monospace text-muted text-uppercase bg-light px-3 py-1 rounded border">
-            Trace Path Log: {pageHistory.map((h, i) => (
+          <div className="small font-monospace text-muted text-uppercase bg-light px-3 py-1 rounded border d-none d-md-block">
+            Trace Path: {pageHistory.map((h, i) => (
               <span key={i} className={i === historyIndex ? 'text-success fw-bold' : ''}>
                 {h}{i < pageHistory.length - 1 ? ' → ' : ''}
               </span>
@@ -135,11 +128,15 @@ function App() {
           <header className="py-5 text-white text-center mb-5 tactical-hero-banner mt-3">
             <div className="container py-4">
               <h1 className="display-4 fw-bold text-uppercase mb-2">TacticalPro Store</h1>
+              
               <div className="d-flex justify-content-center my-3 text-success">
-                <FaShieldAlt style={{ fontSize: '60px', filter: 'drop-shadow(0px 4px 6px rgba(0,0,0,0.4))' }} />
+                <FaShieldAlt style={{ fontSize: '60px', filter: 'drop-shadow(0px 4px 6px rgba(0,0,0,0.5))' }} />
               </div>
+
               <p className="lead text-light mb-4">High-performance mission-ready gear and active hardware engineering.</p>
-              <button className="btn btn-success fw-bold px-4 py-2 shadow" onClick={() => setActivePage('Shop')}>ENTER ONLINE STOREFRONT</button>
+              <button className="btn btn-success fw-bold px-4 py-2 shadow" onClick={() => setActivePage('Shop')}>
+                ENTER ONLINE STOREFRONT
+              </button>
             </div>
           </header>
           <main className="container flex-grow-1">
@@ -195,3 +192,8 @@ function App() {
             <hr className="border-secondary my-4" />
             <div className="row g-4 font-sans-serif">
               <div className="col-md-4">
+                <h5 className="text-success fw-bold small text-uppercase mb-2"><FaMapMarkerAlt className="me-2"/>Physical Outpost Path</h5>
+                <p className="text-light-50 small mb-0">TACTICALPRO<br/>123 NEW STREET LAKEWORTH FL<br/>USA</p>
+              </div>
+              <div className="col-md-4">
+                <h5 className="text-success fw-bold small text-uppercase mb-2"><FaPhoneAlt className="me-2"/>Secure Comms Link</h5>
