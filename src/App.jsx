@@ -91,6 +91,7 @@ function App() {
     <div className="bg-light min-vh-100 d-flex flex-column" style={{ paddingTop: '70px' }}>
       <Navbar cartCount={totalItemsCount} activePage={activePage} setActivePage={setActivePage} onCartClick={() => setIsCartOpen(true)} />
 
+      {/* FIXED INTERNAL BUTTON LAYER BAR PANEL */}
       <div className="bg-white border-bottom py-2 shadow-sm sticky-history-bar">
         <div className="container d-flex align-items-center justify-content-between">
           <div className="d-flex align-items-center gap-2">
@@ -110,7 +111,7 @@ function App() {
             </button>
           </div>
           <div className="small font-monospace text-muted text-uppercase bg-light px-3 py-1 rounded border d-none d-md-block">
-            Trace Path Log: {pageHistory.map((h, i) => (
+            Trace Path: {pageHistory.map((h, i) => (
               <span key={i} className={i === historyIndex ? 'text-success fw-bold' : ''}>
                 {h}{i < pageHistory.length - 1 ? ' → ' : ''}
               </span>
@@ -134,7 +135,7 @@ function App() {
                 </button>
               </div>
             </header>
-            <main className="container">
+            <main className="container flex-grow-1">
               <div className="row my-4 align-items-center bg-white p-4 rounded shadow-sm border">
                 <div className="col-md-7">
                   <h3 className="fw-bold text-dark border-start border-success border-4 ps-3 mb-3">Operator Standards</h3>
@@ -151,7 +152,7 @@ function App() {
         )}
 
         {activePage === 'Shop' && (
-          <main className="container mt-4 pt-2">
+          <main className="container flex-grow-1 mt-4 pt-2">
             <div className="d-flex justify-content-between align-items-center mb-4">
               <h2 className="fw-bold border-start border-success border-4 ps-3 mb-0">Full Operational Inventory</h2>
               <span className="badge bg-dark px-3 py-2 fs-6">{products.length} Items Available</span>
@@ -193,5 +194,3 @@ function App() {
                 <div className="col-md-4">
                   <h5 className="text-success fw-bold small text-uppercase mb-2"><FaPhoneAlt className="me-2"/>Secure Comms Link</h5>
                   <p className="text-light-50 font-monospace small mb-0">CONTACT: 1876 123-4567</p>
-                </div>
-                <div className="col-md-4">
