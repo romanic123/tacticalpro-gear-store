@@ -5,7 +5,7 @@ import CheckoutGateway from './components/CheckoutGateway';
 import AboutLogistics from './components/AboutLogistics';
 import ShoppingCart from './components/ShoppingCart';
 import products from './data/products';
-import { FaShieldAlt, FaInfoCircle, FaFileInvoiceDollar, FaMapMarkerAlt, FaPhoneAlt, FaEnvelope, FaArrowLeft, FaArrowRight } from 'react-icons/fa';
+import { FaShieldAlt, FaInfoCircle, FaFileInvoiceDollar, FaMapMarkerAlt, FaPhoneAlt, FaEnvelope } from 'react-icons/fa';
 import './App.css';
 
 function App() {
@@ -14,12 +14,12 @@ function App() {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [checkoutStep, setCheckoutStep] = useState('none'); 
 
-  // Internal state tracking arrays for backward/forward history management
+  // ADVANCED: Internal state routing arrays for path logging management
   const [pageHistory, setPageHistory] = useState(['Home']);
   const [historyIndex, setHistoryIndex] = useState(0);
   const [isInternalNavigating, setIsInternalNavigating] = useState(false);
 
-  // Synchronize history tracking when active page changes via Navbar links
+  // Monitors and logs historical page indexing when tabs are clicked
   useEffect(() => {
     if (isInternalNavigating) {
       setIsInternalNavigating(false);
@@ -34,7 +34,7 @@ function App() {
     setHistoryIndex(updatedHistory.length - 1);
   }, [activePage]);
 
-  // Hook interceptor locking the browser back arrow key to use local memory instead of leaving site
+  // Intercepts hardware back gestures to use internal memory matrix arrays instead of leaving the site
   useEffect(() => {
     window.history.pushState({ page: activePage }, '', '');
     const handlePopState = (event) => {
@@ -91,39 +91,18 @@ function App() {
   const grandTotal = subtotal - discount + tax;
 
   return (
-    <div className="bg-light min-vh-100 d-flex flex-column" style={{ paddingTop: '70px' }}>
-      <Navbar cartCount={totalItemsCount} activePage={activePage} setActivePage={setActivePage} onCartClick={() => setIsCartOpen(true)} />
+    <div className="bg-light min-vh-100 d-flex flex-column" style={{ paddingTop: '115px' }}>
+      <Navbar 
+        cartCount={totalItemsCount} 
+        activePage={activePage} 
+        setActivePage={setActivePage} 
+        onCartClick={() => setIsCartOpen(true)}
+        historyIndex={historyIndex}
+        pageHistory={pageHistory}
+        onBack={handleTriggerBack}
+        onForward={handleTriggerForward}
+      />
 
-      {/* FIXED INTERNAL BUTTON LAYER BAR PANEL */}
-      <div className="bg-white border-bottom py-2 shadow-sm sticky-history-bar">
-        <div className="container d-flex align-items-center justify-content-between">
-          <div className="d-flex align-items-center gap-2">
-            <button 
-              className={`btn btn-sm ${historyIndex === 0 ? 'btn-outline-secondary opacity-50' : 'btn-success fw-bold text-white'}`}
-              onClick={handleTriggerBack}
-              disabled={historyIndex === 0}
-            >
-              <FaArrowLeft className="me-1" /> Back
-            </button>
-            <button 
-              className={`btn btn-sm ${historyIndex === pageHistory.length - 1 ? 'btn-outline-secondary opacity-50' : 'btn-success fw-bold text-white'}`}
-              onClick={handleTriggerForward}
-              disabled={historyIndex === pageHistory.length - 1}
-            >
-              Forward <FaArrowRight className="ms-1" />
-            </button>
-          </div>
-          <div className="small font-monospace text-muted text-uppercase bg-light px-3 py-1 rounded border d-none d-md-block">
-            Trace Path Log: {pageHistory.map((h, i) => (
-              <span key={i} className={i === historyIndex ? 'text-success fw-bold' : ''}>
-                {h}{i < pageHistory.length - 1 ? ' → ' : ''}
-              </span>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* CORE CONTAINER ROUTER VIEWS */}
       <div className="flex-grow-1">
         {activePage === 'Home' && (
           <>
@@ -134,9 +113,7 @@ function App() {
                   <FaShieldAlt style={{ fontSize: '60px', filter: 'drop-shadow(0px 4px 6px rgba(0,0,0,0.5))' }} />
                 </div>
                 <p className="lead text-light mb-4">High-performance mission-ready gear and active hardware engineering.</p>
-                <button className="btn btn-success fw-bold px-4 py-2 shadow" onClick={() => setActivePage('Shop')}>
-                  ENTER ONLINE STOREFRONT
-                </button>
+                <button className="btn btn-success fw-bold px-4 py-2 shadow" onClick={() => setActivePage('Shop')}>ENTER ONLINE STOREFRONT</button>
               </div>
             </header>
             <main className="container">
@@ -195,3 +172,26 @@ function App() {
                   <h5 className="text-success fw-bold small text-uppercase mb-2"><FaMapMarkerAlt className="me-2"/>Physical Outpost Path</h5>
                   <p className="text-light-50 small mb-0">TACTICALPRO<br/>123 NEW STREET LAKEWORTH FL<br/>USA</p>
                 </div>
+                <div className="col-md-4">
+                  <h5 className="text-success fw-bold small text-uppercase mb-2"><FaPhoneAlt className="me-2"/>Secure Comms Link</h5>
+                  <p className="text-light-50 font-monospace small mb-0">CONTACT: 1876 123-4567</p>
+                </div>
+                <div className="col-md-4">
+                  <h5 className="text-success fw-bold small text-uppercase mb-2"><FaEnvelope className="me-2"/>Data Gateway Hub</h5>
+                  <p className="text-light-50 font-monospace small mb-0">EMAIL: xzyTACTICALPRO@aolmail.com</p>
+                </div>
+              </div>
+            </div>
+          </main>
+        )}
+      </div>
+
+      <div className="container mt-5 pt-3">
+        <section className="p-4 bg-white rounded border text-center shadow-sm mb-5">
+          <div className="d-flex justify-content-center align-items-center gap-2 mb-2 text-success fw-bold">SECURE CHECKOUT CONTEXT GUARANTEED</div>
+          <p className="text-muted small mb-0">Protected using 256-bit automated encryption processing. Secure execution token validated mapping rules active.</p>
+        </section>
+      </div>
+
+      <footer className="bg-dark text-secondary py-3 mt-auto border-top border-secondary">
+        <div className="container d-flex justify-content-between align-items-center small">
