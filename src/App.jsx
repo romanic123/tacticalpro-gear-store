@@ -14,7 +14,6 @@ function App() {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [checkoutStep, setCheckoutStep] = useState('none'); 
 
-  // Internal structural state navigation tracker arrays
   const [pageHistory, setPageHistory] = useState(['Home']);
   const [historyIndex, setHistoryIndex] = useState(0);
   const [isInternalNavigating, setIsInternalNavigating] = useState(false);
@@ -92,7 +91,6 @@ function App() {
     <div className="bg-light min-vh-100 d-flex flex-column" style={{ paddingTop: '70px' }}>
       <Navbar cartCount={totalItemsCount} activePage={activePage} setActivePage={setActivePage} onCartClick={() => setIsCartOpen(true)} />
 
-      {/* FIXED INTERNAL HISTORY MANAGEMENT COMPONENT BAR ROW */}
       <div className="bg-white border-bottom py-2 shadow-sm sticky-history-bar">
         <div className="container d-flex align-items-center justify-content-between">
           <div className="d-flex align-items-center gap-2">
@@ -121,7 +119,6 @@ function App() {
         </div>
       </div>
 
-      {/* CORE FRAME ROUTER ROUTING VIEWS */}
       <div className="flex-grow-1">
         {activePage === 'Home' && (
           <>
@@ -147,14 +144,8 @@ function App() {
                   <FaShieldAlt style={{ fontSize: '100px', opacity: 0.8 }} />
                 </div>
               </div>
-              <div className="d-flex justify-content-between align-items-center mb-4 mt-5">
-                <h4 className="fw-bold border-start border-success border-4 ps-3 mb-0">Featured Preview</h4>
-              </div>
-              <div className="row">
-                {products.slice(0, 3).map((item) => (
-                  <ProductCard key={item.id} product={item} onAddToCart={addToCart} />
-                ))}
-              </div>
+              <div className="d-flex justify-content-between align-items-center mb-4 mt-5"><h4 className="fw-bold border-start border-success border-4 ps-3 mb-0">Featured Preview</h4></div>
+              <div className="row">{products.slice(0, 3).map((item) => <ProductCard key={item.id} product={item} onAddToCart={addToCart} />)}</div>
             </main>
           </>
         )}
@@ -165,18 +156,14 @@ function App() {
               <h2 className="fw-bold border-start border-success border-4 ps-3 mb-0">Full Operational Inventory</h2>
               <span className="badge bg-dark px-3 py-2 fs-6">{products.length} Items Available</span>
             </div>
-            <div className="row">
-              {products.map((item) => (
-                <ProductCard key={item.id} product={item} onAddToCart={addToCart} />
-              ))}
-            </div>
+            <div className="row">{products.map((item) => <ProductCard key={item.id} product={item} onAddToCart={addToCart} />)}</div>
           </main>
         )}
 
         {activePage === 'About' && <AboutLogistics />}
 
         {activePage === 'Warranty' && (
-          <main className="container mt-4 pt-2">
+          <main className="container flex-grow-1 mt-4 pt-2">
             <div className="p-5 bg-white rounded shadow-sm border mb-4">
               <h2 className="fw-bold border-start border-success border-4 ps-3 mb-4 text-uppercase">
                 <FaInfoCircle className="text-success me-2" /> Extended Warranty Coverage Plan
@@ -194,7 +181,7 @@ function App() {
         )}
 
         {activePage === 'Contact' && (
-          <main className="container mt-4 pt-2">
+          <main className="container flex-grow-1 mt-4 pt-2">
             <div className="p-5 bg-dark text-white rounded shadow border border-secondary mb-4">
               <h2 className="fw-bold border-start border-success border-4 ps-3 mb-4 text-success text-uppercase">HQ Command Terminal</h2>
               <hr className="border-secondary my-4" />
@@ -202,5 +189,9 @@ function App() {
                 <div className="col-md-4">
                   <h5 className="text-success fw-bold small text-uppercase mb-2"><FaMapMarkerAlt className="me-2"/>Physical Outpost Path</h5>
                   <p className="text-light-50 small mb-0">TACTICALPRO<br/>123 NEW STREET LAKEWORTH FL<br/>USA</p>
+                </div>
+                <div className="col-md-4">
+                  <h5 className="text-success fw-bold small text-uppercase mb-2"><FaPhoneAlt className="me-2"/>Secure Comms Link</h5>
+                  <p className="text-light-50 font-monospace small mb-0">CONTACT: 1876 123-4567</p>
                 </div>
                 <div className="col-md-4">
