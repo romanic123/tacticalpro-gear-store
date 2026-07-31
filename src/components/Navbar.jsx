@@ -14,7 +14,7 @@ function Navbar({ cartCount, activePage, setActivePage, onCartClick }) {
         {/* RIGHT SIDE ACTIONS LAYER: Holds Cart and Hamburger button side-by-side on mobile view */}
         <div className="d-flex align-items-center gap-2 order-lg-last">
           {/* CART BUTTON OUTSIDE THE COLLAPSE DROPDOWN (Visible at all times on mobile) */}
-          <button className="btn btn-outline-success d-flex align-items-center gap-2 position-relative fw-bold px-3 py-1 py-lg-2" onClick={onCartClick}>
+          <button className="btn btn-outline-success d-flex align-items-center gap-2 position-relative fw-bold px-3 py-1" onClick={onCartClick}>
             <FaShoppingCart /> <span className="d-none d-sm-inline">Cart</span>
             {cartCount > 0 && (
               <span className="badge bg-danger position-absolute top-0 start-100 translate-middle rounded-pill shadow">
@@ -30,7 +30,7 @@ function Navbar({ cartCount, activePage, setActivePage, onCartClick }) {
         </div>
         
         {/* COLLAPSIBLE LINKS SECTION: Only the navigation text tabs drop down on mobile */}
-        <div className="collapse navbar-collapse id-navbarNav" id="navbarNav">
+        <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav me-auto ps-lg-3 mt-2 mt-lg-0">
             <li className="nav-item">
               <button className={`nav-link btn btn-link border-0 text-decoration-none text-start w-100 ${activePage === 'Home' ? 'active text-success fw-bold' : ''}`} onClick={() => setActivePage('Home')}>Home</button>
