@@ -14,12 +14,11 @@ function App() {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [checkoutStep, setCheckoutStep] = useState('none'); 
 
-  // History trail mapping arrays
+  // Internal state tracking arrays for backwards and forwards history management
   const [pageHistory, setPageHistory] = useState(['Home']);
   const [historyIndex, setHistoryIndex] = useState(0);
   const [isInternalNavigating, setIsInternalNavigating] = useState(false);
 
-  // Sync historical tracks on link clicks
   useEffect(() => {
     if (isInternalNavigating) {
       setIsInternalNavigating(false);
@@ -34,7 +33,6 @@ function App() {
     setHistoryIndex(updatedHistory.length - 1);
   }, [activePage]);
 
-  // Trap back navigation gestures to trigger local state backward movements
   useEffect(() => {
     window.history.pushState({ page: activePage }, '', '');
     const handlePopState = (event) => {
@@ -128,9 +126,11 @@ function App() {
           <header className="py-5 text-white text-center mb-5 tactical-hero-banner mt-3">
             <div className="container py-4">
               <h1 className="display-4 fw-bold text-uppercase mb-2">TacticalPro Store</h1>
+              
               <div className="d-flex justify-content-center my-3 text-success">
                 <FaShieldAlt style={{ fontSize: '60px', filter: 'drop-shadow(0px 4px 6px rgba(0,0,0,0.5))' }} />
               </div>
+
               <p className="lead text-light mb-4">High-performance mission-ready gear and active hardware engineering.</p>
               <button className="btn btn-success fw-bold px-4 py-2 shadow" onClick={() => setActivePage('Shop')}>
                 ENTER ONLINE STOREFRONT
@@ -197,3 +197,4 @@ function App() {
                 <h5 className="text-success fw-bold small text-uppercase mb-2"><FaPhoneAlt className="me-2"/>Secure Comms Link</h5>
                 <p className="text-light-50 font-monospace small mb-0">CONTACT: 1876 123-4567</p>
               </div>
+              <div className="col-md-4">
