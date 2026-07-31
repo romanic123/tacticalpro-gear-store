@@ -6,14 +6,11 @@ function Navbar({ cartCount, activePage, setActivePage, onCartClick }) {
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark fixed-top border-bottom border-secondary shadow-sm py-2">
       <div className="container d-flex justify-content-between align-items-center">
         
-        {/* Brand Logo Link */}
         <button className="navbar-brand btn btn-link text-success fw-bold p-0 border-0 fs-4 d-flex align-items-center gap-2 text-decoration-none" onClick={() => setActivePage('Home')}>
           <FaShieldAlt /> TACTICALPRO
         </button>
         
-        {/* RIGHT SIDE ACTIONS LAYER: Holds Cart and Hamburger button side-by-side on mobile view */}
         <div className="d-flex align-items-center gap-2 order-lg-last">
-          {/* CART BUTTON OUTSIDE THE COLLAPSE DROPDOWN (Visible at all times on mobile) */}
           <button className="btn btn-outline-success d-flex align-items-center gap-2 position-relative fw-bold px-3 py-1" onClick={onCartClick}>
             <FaShoppingCart /> <span className="d-none d-sm-inline">Cart</span>
             {cartCount > 0 && (
@@ -23,13 +20,11 @@ function Navbar({ cartCount, activePage, setActivePage, onCartClick }) {
             )}
           </button>
 
-          {/* Hamburger menu toggler button */}
           <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span className="navbar-toggler-icon"></span>
           </button>
         </div>
         
-        {/* COLLAPSIBLE LINKS SECTION: Only the navigation text tabs drop down on mobile */}
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav me-auto ps-lg-3 mt-2 mt-lg-0">
             <li className="nav-item">
