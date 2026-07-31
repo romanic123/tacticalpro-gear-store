@@ -14,10 +14,12 @@ function App() {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [checkoutStep, setCheckoutStep] = useState('none'); 
 
+  // Internal state tracking arrays for backward/forward history management
   const [pageHistory, setPageHistory] = useState(['Home']);
   const [historyIndex, setHistoryIndex] = useState(0);
   const [isInternalNavigating, setIsInternalNavigating] = useState(false);
 
+  // Synchronize history tracking when active page changes via Navbar links
   useEffect(() => {
     if (isInternalNavigating) {
       setIsInternalNavigating(false);
@@ -32,6 +34,7 @@ function App() {
     setHistoryIndex(updatedHistory.length - 1);
   }, [activePage]);
 
+  // Hook interceptor locking the browser back arrow key to use local memory instead of leaving site
   useEffect(() => {
     window.history.pushState({ page: activePage }, '', '');
     const handlePopState = (event) => {
@@ -111,7 +114,7 @@ function App() {
             </button>
           </div>
           <div className="small font-monospace text-muted text-uppercase bg-light px-3 py-1 rounded border d-none d-md-block">
-            Trace Path: {pageHistory.map((h, i) => (
+            Trace Path Log: {pageHistory.map((h, i) => (
               <span key={i} className={i === historyIndex ? 'text-success fw-bold' : ''}>
                 {h}{i < pageHistory.length - 1 ? ' → ' : ''}
               </span>
@@ -120,6 +123,7 @@ function App() {
         </div>
       </div>
 
+      {/* CORE CONTAINER ROUTER VIEWS */}
       <div className="flex-grow-1">
         {activePage === 'Home' && (
           <>
@@ -135,7 +139,7 @@ function App() {
                 </button>
               </div>
             </header>
-            <main className="container flex-grow-1">
+            <main className="container">
               <div className="row my-4 align-items-center bg-white p-4 rounded shadow-sm border">
                 <div className="col-md-7">
                   <h3 className="fw-bold text-dark border-start border-success border-4 ps-3 mb-3">Operator Standards</h3>
@@ -152,7 +156,7 @@ function App() {
         )}
 
         {activePage === 'Shop' && (
-          <main className="container flex-grow-1 mt-4 pt-2">
+          <main className="container mt-4 pt-2">
             <div className="d-flex justify-content-between align-items-center mb-4">
               <h2 className="fw-bold border-start border-success border-4 ps-3 mb-0">Full Operational Inventory</h2>
               <span className="badge bg-dark px-3 py-2 fs-6">{products.length} Items Available</span>
@@ -164,7 +168,7 @@ function App() {
         {activePage === 'About' && <AboutLogistics />}
 
         {activePage === 'Warranty' && (
-          <main className="container flex-grow-1 mt-4 pt-2">
+          <main className="container mt-4 pt-2">
             <div className="p-5 bg-white rounded shadow-sm border mb-4">
               <h2 className="fw-bold border-start border-success border-4 ps-3 mb-4 text-uppercase">
                 <FaInfoCircle className="text-success me-2" /> Extended Warranty Coverage Plan
@@ -182,7 +186,7 @@ function App() {
         )}
 
         {activePage === 'Contact' && (
-          <main className="container flex-grow-1 mt-4 pt-2">
+          <main className="container mt-4 pt-2">
             <div className="p-5 bg-dark text-white rounded shadow border border-secondary mb-4">
               <h2 className="fw-bold border-start border-success border-4 ps-3 mb-4 text-success text-uppercase">HQ Command Terminal</h2>
               <hr className="border-secondary my-4" />
@@ -191,6 +195,3 @@ function App() {
                   <h5 className="text-success fw-bold small text-uppercase mb-2"><FaMapMarkerAlt className="me-2"/>Physical Outpost Path</h5>
                   <p className="text-light-50 small mb-0">TACTICALPRO<br/>123 NEW STREET LAKEWORTH FL<br/>USA</p>
                 </div>
-                <div className="col-md-4">
-                  <h5 className="text-success fw-bold small text-uppercase mb-2"><FaPhoneAlt className="me-2"/>Secure Comms Link</h5>
-                  <p className="text-light-50 font-monospace small mb-0">CONTACT: 1876 123-4567</p>
