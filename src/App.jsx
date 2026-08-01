@@ -135,13 +135,9 @@ function App() {
 
           {
 
-            ...item,
+            ...item, quantity: item.quantity + 1
 
-            quantity: item.quantity + 1
-
-          }
-
-            :
+          }:
 
           item
 
