@@ -13,8 +13,40 @@ function App() {
   const [cartItems, setCartItems] = useState([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [checkoutStep, setCheckoutStep] = useState('none');
-
+ 
+    // --- HISTORY NAV STATE START ---
   const [pageHistory, setPageHistory] = useState(['Home']);
+  const [historyIndex, setHistoryIndex] = useState(0);
+  const [isInternalNavigating, setIsInternalNavigating] = useState(false);
+
+  useEffect(() => {
+    if (isInternalNavigating) {
+      setIsInternalNavigating(false);
+      return;
+    }
+    if (pageHistory[historyIndex] === activePage) return;
+    const cleanHistory = pageHistory.slice(0, historyIndex + 1);
+    setPageHistory([...cleanHistory, activePage]);
+    setHistoryIndex(cleanHistory.length);
+  }, [activePage]);
+
+  const handleTriggerBack = () => {
+    if (historyIndex > 0) {
+      setIsInternalNavigating(true);
+      setHistoryIndex(historyIndex - 1);
+      setActivePage(pageHistory[historyIndex - 1]);
+    }
+  };
+
+  const handleTriggerForward = () => {
+    if (historyIndex < pageHistory.length - 1) {
+      setIsInternalNavigating(true);
+      setHistoryIndex(historyIndex + 1);
+      setActivePage(pageHistory[historyIndex + 1]);
+    }
+  };
+  // --- HISTORY NAV STATE END ---
+const [pageHistory, setPageHistory] = useState(['Home']);
   const [historyIndex, setHistoryIndex] = useState(0);
   const [isInternalNavigating, setIsInternalNavigating] = useState(false);
 
@@ -90,6 +122,18 @@ function App() {
   return (
     <div className="bg-light min-vh-100 d-flex flex-column" style={{ paddingTop: '70px' }}>
       <Navbar cartCount={totalItemsCount} activePage={activePage} setActivePage={setActivePage} onCartClick={() => setIsCartOpen(true)} />
+      {/* --- VISUAL BUTTONS START --- */}
+      <div className="bg-white border-bottom py-2 shadow-sm">
+        <div className="container d-flex gap-2">
+          <button className="btn btn-sm btn-success fw-bold px-3" onClick={handleTriggerBack} disabled={historyIndex === 0}>
+            ← Back
+          </button>
+          <button className="btn btn-sm btn-success fw-bold px-3" onClick={handleTriggerForward} disabled={historyIndex === pageHistory.length - 1}>
+            Forward →
+          </button>
+        </div>
+      </div>
+      {/* --- VISUAL BUTTONS END --- */}
 
       <div className="bg-white border-bottom py-2 shadow-sm sticky-history-bar">
         <div className="container d-flex align-items-center justify-content-between">
