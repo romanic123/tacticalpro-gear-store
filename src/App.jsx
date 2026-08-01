@@ -1,1011 +1,175 @@
-import React, { useState } from 'react';
-
+import React, { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
 import ProductCard from './components/ProductCard';
 import CheckoutGateway from './components/CheckoutGateway';
 import AboutLogistics from './components/AboutLogistics';
 import ShoppingCart from './components/ShoppingCart';
-
 import products from './data/products';
-
-import {
-  FaShieldAlt,
-  FaInfoCircle,
-  FaFileInvoiceDollar,
-  FaMapMarkerAlt,
-  FaPhoneAlt,
-  FaEnvelope,
-  FaArrowLeft,
-  FaArrowRight
-} from 'react-icons/fa';
-
+import { FaShieldAlt, FaInfoCircle, FaFileInvoiceDollar, FaMapMarkerAlt, FaPhoneAlt, FaEnvelope } from 'react-icons/fa';
 import './App.css';
 
-
-
 function App() {
-
-
   const [activePage, setActivePage] = useState('Home');
-
-
-  // React controlled navigation history
-  const [pageHistory, setPageHistory] = useState(['Home']);
-  const [historyIndex, setHistoryIndex] = useState(0);
-
-
   const [cartItems, setCartItems] = useState([]);
-
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [checkoutStep, setCheckoutStep] = useState('none'); 
 
-  const [checkoutStep, setCheckoutStep] = useState('none');
-
-
-
-  // -------------------------
-  // Navigation System
-  // -------------------------
-
-  const navigateTo = (page) => {
-
-    const newHistory = pageHistory.slice(0, historyIndex + 1);
-
-    newHistory.push(page);
-
-
-    setPageHistory(newHistory);
-
-    setHistoryIndex(newHistory.length - 1);
-
-    setActivePage(page);
-
-  };
-
-
-
-  const goBack = () => {
-
-    if (historyIndex > 0) {
-
-      const newIndex = historyIndex - 1;
-
-      setHistoryIndex(newIndex);
-
-      setActivePage(pageHistory[newIndex]);
-
-    }
-
-  };
-
-
-
-  const goForward = () => {
-
-    if (historyIndex < pageHistory.length - 1) {
-
-      const newIndex = historyIndex + 1;
-
-      setHistoryIndex(newIndex);
-
-      setActivePage(pageHistory[newIndex]);
-
-    }
-
-  };
-
-
-
-
-
-  // -------------------------
-  // Shopping Cart Functions
-  // -------------------------
-
+  useEffect(() => {
+    window.history.pushState({ page: activePage }, '', '');
+    const handlePopState = (event) => {
+      if (activePage !== 'Home') {
+        event.preventDefault();
+        setActivePage('Home'); 
+      }
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, [activePage]);
 
   const addToCart = (productWithSelection) => {
-
     setCartItems((prevItems) => {
-
-
       const existingItem = prevItems.find(
-
-        (item) =>
-
-          item.id === productWithSelection.id &&
-
-          item.selectedSize === productWithSelection.selectedSize
-
+        (item) => item.id === productWithSelection.id && item.selectedSize === productWithSelection.selectedSize
       );
-
-
-
       if (existingItem) {
-
         return prevItems.map((item) =>
-
-          (
-
-            item.id === productWithSelection.id &&
-
-            item.selectedSize === productWithSelection.selectedSize
-
-          )
-
-            ?
-
-          {
-
-            ...item, quantity: item.quantity + 1
-
-          }:
-
-          item
-
+          (item.id === productWithSelection.id && item.selectedSize === productWithSelection.selectedSize)
+            ? { ...item, quantity: item.quantity + 1 } : item
         );
-
       }
-
-
-
-      return [
-
-        ...prevItems,
-
-        {
-
-          ...productWithSelection,
-
-          quantity: 1
-
-        }
-
-      ];
-
+      return [...prevItems, { ...productWithSelection, quantity: 1 }];
     });
-
   };
-
-
-
 
   const removeFromCart = (id, selectedSize) => {
-
-
-    setCartItems((prevItems) =>
-
-      prevItems.filter(
-
-        (item) =>
-
-        !(
-
-          item.id === id &&
-
-          item.selectedSize === selectedSize
-
-        )
-
-      )
-
-    );
-
+    setCartItems((prevItems) => prevItems.filter((item) => !(item.id === id && item.selectedSize === selectedSize)));
   };
 
-
-
-
-
-  const totalItemsCount = cartItems.reduce(
-
-    (acc, item) => acc + item.quantity,
-
-    0
-
-  );
-
-
-
-  const subtotal = cartItems.reduce(
-
-    (acc, item) =>
-
-      acc + item.price * item.quantity,
-
-    0
-
-  );
-
-
-
+  const totalItemsCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);
+  const subtotal = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
   const discount = subtotal * 0.10;
-
-
   const tax = (subtotal - discount) * 0.15;
-
-
   const grandTotal = subtotal - discount + tax;
 
-
-
-
-
-
   return (
-
-
-    <div
-
-      className="bg-light min-vh-100 d-flex flex-column"
-
-      style={{ paddingTop: '70px' }}
-
-    >
-
-
-
-      <Navbar
-
-        cartCount={totalItemsCount}
-
-        activePage={activePage}
-
-        setActivePage={navigateTo}
-
-        onCartClick={() => setIsCartOpen(true)}
-
-      />
-
-
-
-
-
-      {/* Internal App Navigation Buttons */}
-
-      <div className="container mt-3">
-
-
-        <div className="d-flex justify-content-between">
-
-
-
-          <button
-
-            className="btn btn-outline-success"
-
-            onClick={goBack}
-
-            disabled={historyIndex === 0}
-
-          >
-
-            <FaArrowLeft className="me-2"/>
-
-            Back
-
-          </button>
-
-
-
-
-
-          <button
-
-            className="btn btn-outline-success"
-
-            onClick={goForward}
-
-            disabled={historyIndex === pageHistory.length - 1}
-
-          >
-
-            Forward
-
-            <FaArrowRight className="ms-2"/>
-
-          </button>
-
-
-
-        </div>
-
-
-      </div>
-
-
-
-
+    <div className="bg-light min-vh-100 d-flex flex-column" style={{ paddingTop: '70px' }}>
+      <Navbar cartCount={totalItemsCount} activePage={activePage} setActivePage={setActivePage} onCartClick={() => setIsCartOpen(true)} />
 
       {activePage === 'Home' && (
-
         <>
-
-
+          {/* UPGRADE: Swapped 'bg-dark' for your custom background class 'tactical-hero-banner' */}
           <header className="py-5 text-white text-center mb-5 tactical-hero-banner mt-5">
-
-
             <div className="container py-4">
-
-
-              <h1 className="display-4 fw-bold text-uppercase mb-2">
-
-                TacticalPro Store
-
-              </h1>
-
-
-
+              <h1 className="display-4 fw-bold text-uppercase mb-2">TacticalPro Store</h1>
+              
               <div className="d-flex justify-content-center my-3 text-success">
-
-
-                <FaShieldAlt
-
-                  style={{
-
-                    fontSize: '60px',
-
-                    filter:
-
-                    'drop-shadow(0px 4px 6px rgba(0,0,0,0.5))'
-
-                  }}
-
-                />
-
-
+                <FaShieldAlt style={{ fontSize: '60px', filter: 'drop-shadow(0px 4px 6px rgba(0,0,0,0.5))' }} />
               </div>
 
-
-
-
-              <p className="lead text-light mb-4">
-
-                High-performance mission-ready gear and active hardware engineering.
-
-              </p>
-
-
-
-
-              <button
-
-                className="btn btn-success fw-bold px-4 py-2 shadow"
-
-                onClick={() => navigateTo('Shop')}
-
-              >
-
+              <p className="lead text-light mb-4">High-performance mission-ready gear and active hardware engineering.</p>
+              <button className="btn btn-success fw-bold px-4 py-2 shadow" onClick={() => setActivePage('Shop')}>
                 ENTER ONLINE STOREFRONT
-
               </button>
-
-
-
             </div>
-
-
           </header>
-
-
-
-
-
           <main className="container flex-grow-1">
-
-
-
             <div className="row my-4 align-items-center bg-white p-4 rounded shadow-sm border">
-
-
-
               <div className="col-md-7">
-
-
-                <h3 className="fw-bold text-dark border-start border-success border-4 ps-3 mb-3">
-
-                  Operator Standards
-
-                </h3>
-
-
-
-                <p className="text-secondary">
-
-                  Welcome to TacticalPro Gear. We cater to law enforcement,
-
-                  security personnel, and outdoor enthusiasts who refuse to
-
-                  compromise on build resilience.
-
-                </p>
-
-
+                <h3 className="fw-bold text-dark border-start border-success border-4 ps-3 mb-3">Operator Standards</h3>
+                <p className="text-secondary">Welcome to TacticalPro Gear. We cater to law enforcement, security personnel, and outdoor enthusiasts who refuse to compromise on build resilience.</p>
               </div>
-
-
-
-
-
-              <div className="col-md-5 text-center fs-1 text-success">
-
-
-                <FaShieldAlt
-
-                  style={{
-
-                    fontSize:'100px',
-
-                    opacity:0.8
-
-                  }}
-
-                />
-
-
+              <div className="col-col-md-5 text-center fs-1 text-success">
+                <FaShieldAlt style={{ fontSize: '100px', opacity: 0.8 }} />
               </div>
-
-
-
             </div>
-
-
-
-
-
-            <div className="d-flex justify-content-between align-items-center mb-4 mt-5">
-
-
-              <h4 className="fw-bold border-start border-success border-4 ps-3 mb-0">
-
-                Featured Preview
-
-              </h4>
-
-
-            </div>
-
-
-
-
-
-            <div className="row">
-
-
-              {products.slice(0,3).map((item)=>(
-
-
-                <ProductCard
-
-                  key={item.id}
-
-                  product={item}
-
-                  onAddToCart={addToCart}
-
-                />
-
-
-              ))}
-
-
-            </div>
-
-
-
+            <div className="d-flex justify-content-between align-items-center mb-4 mt-5"><h4 className="fw-bold border-start border-success border-4 ps-3 mb-0">Featured Preview</h4></div>
+            <div className="row">{products.slice(0, 3).map((item) => <ProductCard key={item.id} product={item} onAddToCart={addToCart} />)}</div>
           </main>
-
-
-
         </>
-
       )}
-
-
-
-
-
 
       {activePage === 'Shop' && (
-
-
         <main className="container flex-grow-1 mt-5 pt-4">
-
-
           <div className="d-flex justify-content-between align-items-center mb-4">
-
-
-            <h2 className="fw-bold border-start border-success border-4 ps-3 mb-0">
-
-              Full Operational Inventory
-
-            </h2>
-
-
-
-            <span className="badge bg-dark px-3 py-2 fs-6">
-
-              {products.length} Items Available
-
-            </span>
-
-
+            <h2 className="fw-bold border-start border-success border-4 ps-3 mb-0">Full Operational Inventory</h2>
+            <span className="badge bg-dark px-3 py-2 fs-6">{products.length} Items Available</span>
           </div>
-
-
-
-          <div className="row">
-
-
-            {products.map((item)=>(
-
-
-              <ProductCard
-
-                key={item.id}
-
-                product={item}
-
-                onAddToCart={addToCart}
-
-              />
-
-
-            ))}
-
-
-
-          </div>
-
-
-
+          <div className="row">{products.map((item) => <ProductCard key={item.id} product={item} onAddToCart={addToCart} />)}</div>
         </main>
-
-
-      )}
-      
-      {activePage === 'About' && (
-
-        <AboutLogistics />
-
       )}
 
-
-
-
-
+      {activePage === 'About' && <AboutLogistics />}
 
       {activePage === 'Warranty' && (
-
-
         <main className="container flex-grow-1 mt-5 pt-4">
-
-
           <div className="p-5 bg-white rounded shadow-sm border mb-4">
-
-
-
             <h2 className="fw-bold border-start border-success border-4 ps-3 mb-4 text-uppercase">
-
-
-              <FaInfoCircle className="text-success me-2" />
-
-              Extended Warranty Coverage Plan
-
-
+              <FaInfoCircle className="text-success me-2" /> Extended Warranty Coverage Plan
             </h2>
-
-
-
-
-            <p className="text-secondary lead">
-
-
-              Every authorized acquisition transaction executed on our storefront engine includes a comprehensive
-
-
-              <strong>
-
-                1-Year Structural Protection Warranty or full Cash-Back policy coverage
-
-              </strong>
-
-
-            </p>
-
-
-
-
-
+            <p className="text-secondary lead">Every authorized acquisition transaction executed on our storefront engine includes a comprehensive <strong>1-Year Structural Protection Warranty or full Cash-Back policy coverage</strong>.</p>
             <hr className="my-4"/>
-
-
-
-
-
             <h5 className="fw-bold text-dark d-flex align-items-center gap-2 mb-3">
-
-
-              <FaFileInvoiceDollar className="text-success" />
-
-              Cash-Back Clause Conditions &amp; Fine Print
-
-
+              <FaFileInvoiceDollar className="text-success" /> Cash-Back Clause Conditions &amp; Fine Print
             </h5>
-
-
-
-
-
             <p className="text-muted small bg-light p-3 rounded border font-monospace">
-
-
               * CASH BACK POLICY FINE PRINT: In strict compliance with material liability guidelines, processing an official asset return or financial cash-back deployment protocol strictly requires the presentation of an authenticated structural Proof of Payment receipt log.
-
-
             </p>
-
-
-
-
           </div>
-
-
-
         </main>
-
-
       )}
-
-
-
-
-
-
-
 
       {activePage === 'Contact' && (
-
-
         <main className="container flex-grow-1 mt-5 pt-4">
-
-
           <div className="p-5 bg-dark text-white rounded shadow border border-secondary mb-4">
-
-
-
-            <h2 className="fw-bold border-start border-success border-4 ps-3 mb-4 text-success text-uppercase">
-
-
-              HQ Command Terminal
-
-
-            </h2>
-
-
-
-
+            <h2 className="fw-bold border-start border-success border-4 ps-3 mb-4 text-success text-uppercase">HQ Command Terminal</h2>
             <hr className="border-secondary my-4" />
-
-
-
-
-
-
             <div className="row g-4 font-sans-serif">
-
-
-
-
-
               <div className="col-md-4">
-
-
-                <h5 className="text-success fw-bold small text-uppercase mb-2">
-
-
-                  <FaMapMarkerAlt className="me-2"/>
-
-
-                  Physical Outpost Path
-
-
-                </h5>
-
-
-
-                <p className="text-light small mb-0">
-
-
-                  TACTICALPRO
-
-                  <br/>
-
-                  123 NEW STREET LAKEWORTH FL
-
-                  <br/>
-
-                  USA
-
-
-                </p>
-
-
-
+                <h5 className="text-success fw-bold small text-uppercase mb-2"><FaMapMarkerAlt className="me-2"/>Physical Outpost Path</h5>
+                <p className="text-light-50 small mb-0">TACTICALPRO<br/>123 NEW STREET LAKEWORTH FL<br/>USA</p>
               </div>
-
-
-
-
-
-
-
               <div className="col-md-4">
-
-
-
-                <h5 className="text-success fw-bold small text-uppercase mb-2">
-
-
-                  <FaPhoneAlt className="me-2"/>
-
-
-                  Secure Comms Link
-
-
-                </h5>
-
-
-
-
-
-                <p className="text-light font-monospace small mb-0">
-
-
-                  CONTACT: 1876 123-4567
-
-
-                </p>
-
-
-
+                <h5 className="text-success fw-bold small text-uppercase mb-2"><FaPhoneAlt className="me-2"/>Secure Comms Link</h5>
+                <p className="text-light-50 font-monospace small mb-0">CONTACT: 1876 123-4567</p>
               </div>
-
-
-
-
-
-
-
-
               <div className="col-md-4">
-
-
-
-                <h5 className="text-success fw-bold small text-uppercase mb-2">
-
-
-                  <FaEnvelope className="me-2"/>
-
-
-                  Data Gateway Hub
-
-
-                </h5>
-
-
-
-
-
-                <p className="text-light font-monospace small mb-0">
-
-
-                  EMAIL: xzyTACTICALPRO@aolmail.com
-
-
-                </p>
-
-
-
-
+                <h5 className="text-success fw-bold small text-uppercase mb-2"><FaEnvelope className="me-2"/>Data Gateway Hub</h5>
+                <p className="text-light-50 font-monospace small mb-0">EMAIL: xzyTACTICALPRO@aolmail.com</p>
               </div>
-
-
-
-
-
             </div>
-
-
-
           </div>
-
-
-
         </main>
-
-
       )}
 
-
-
-
-
-
-
-
-
-      {/* Secure Checkout Section */}
-
-
       <div className="container mt-5 pt-3">
-
-
         <section className="p-4 bg-white rounded border text-center shadow-sm mb-5">
-
-
-          <div className="d-flex justify-content-center align-items-center gap-2 mb-2 text-success fw-bold">
-
-
-            SECURE CHECKOUT CONTEXT GUARANTEED
-
-
-          </div>
-
-
-
-
-          <p className="text-muted small mb-0">
-
-
-            Protected using 256-bit automated encryption processing. Secure execution token validated mapping rules active.
-
-
-          </p>
-
-
-
-
+          <div className="d-flex justify-content-center align-items-center gap-2 mb-2 text-success fw-bold">SECURE CHECKOUT CONTEXT GUARANTEED</div>
+          <p className="text-muted small mb-0">Protected using 256-bit automated encryption processing. Secure execution token validated mapping rules active.</p>
         </section>
-
-
-
       </div>
 
-
-
-
-
-
-
-
-
       <footer className="bg-dark text-secondary py-3 mt-auto border-top border-secondary">
-
-
         <div className="container d-flex justify-content-between align-items-center small">
-
-
-
-          <span>
-
-
-            &copy; 2026 TacticalPro Store. All Rights Reserved.
-
-
-          </span>
-
-
-
-
-
-          <span className="badge bg-secondary font-monospace text-uppercase">
-
-
-            Build v1.4.0-stable
-
-
-          </span>
-
-
-
-
+          <span>&copy; 2026 TacticalPro Store. All Rights Reserved.</span>
+          <span className="badge bg-secondary font-monospace text-uppercase">Build v1.4.0-stable</span>
         </div>
-
-
-
       </footer>
 
-
-
-
-
-
-
-
-
-      <ShoppingCart
-
-
-
+      <ShoppingCart 
         isCartOpen={isCartOpen}
-
-
         setIsCartOpen={setIsCartOpen}
-
-
         cartItems={cartItems}
-
-
         removeFromCart={removeFromCart}
-
-
         subtotal={subtotal}
-
-
         discount={discount}
-
-
         tax={tax}
-
-
         grandTotal={grandTotal}
-
-
-
-        onCheckout={() => {
-
-
-          setIsCartOpen(false);
-
-
-          setCheckoutStep('form');
-
-
-        }}
-
-
-
+        onCheckout={() => { setIsCartOpen(false); setCheckoutStep('form'); }}
       />
 
-
-
-
-
-
-
-
-
-      <CheckoutGateway
-
-
-
-        step={checkoutStep}
-
-
-        setStep={setCheckoutStep}
-
-
-        grandTotal={grandTotal}
-
-
-
-        clearCart={() => setCartItems([])}
-
-
-
-      />
-
-
-
-
-
+      <CheckoutGateway step={checkoutStep} setStep={setCheckoutStep} grandTotal={grandTotal} clearCart={() => setCartItems([])} />
     </div>
-
-
   );
-
-
 }
-
-
 
 export default App;
